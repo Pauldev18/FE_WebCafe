@@ -28,7 +28,8 @@
         <li class="" onclick="handleThucDon()"><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
               class="fal fa-home"></i>
             Quản lý thực đơn</a></li>
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-list"></i>
+        <li class="" onclick="handleUser()"><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
+              class="fal fa-list"></i>
             Quản lý users</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
               class="fal fa-envelope-open-text"></i>Lịch sử hóa đơn</a></li>
@@ -95,7 +96,42 @@
           </div>
         </div>
 
+        <div id="addModal2" class="modal">
+          <div class="modal-content">
+            <span class="close" id="closeAddModal2">&times;</span>
+            <h2>Thêm Món Mới</h2>
+            <label for="tenMon1">Tên Món:</label>
+            <input type="text" id="tenMon1">
+            <label for="images1">Ảnh:</label>
+            <input type="text" id="images1">
+            <label for="donGia1">Đơn Giá:</label>
+            <input type="text" id="donGia1">
+            <label for="loaiMon1">Loại Món:</label>
+            <select id="loaiMon1"></select>
+            <button id="saveAddButton">Lưu</button>
+          </div>
+        </div>
 
+
+
+        <div id="myModal" class="modal">
+          <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Sửa Thông Tin Món Ăn</h2>
+            <form id="editForm">
+              <label for="tenMon">Tên Món:</label>
+              <input type="text" id="tenMon" name="tenMon" disabled>
+              <br>
+              <label for="images">Ảnh:</label>
+              <input type="text" id="images" name="images" disabled>
+              <br>
+              <label for="donGia">Đơn Giá:</label>
+              <input type="text" id="donGia" name="donGia">
+              <br>
+              <button id="saveButton">Lưu</button>
+            </form>
+          </div>
+        </div>
 
         <div id="deleteModal" class="modal" tabindex="-1">
           <div class="modal-dialog">
@@ -117,11 +153,14 @@
         </div>
 
 
+
+
       </div>
     </div>
   </div>
   <script src="admin.js"></script>
   <script src="thucdon.js"></script>
+  <script src="handleUser.js"></script>
 </body>
 
 </html>
