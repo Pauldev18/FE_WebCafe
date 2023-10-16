@@ -1,0 +1,26 @@
+#gio-hang-container{
+  background-color: cadetblue;
+  position: fixed;
+  height: fit-content;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 12px 20px;
+  margin-top: 50px;
+  position: relative;
+}
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  gap: 10px; /* Khoảng cách giữa các phần tử */
+}
+#tong-tien-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%; /* Đảm bảo nó chiếm toàn bộ chiều rộng của gio-hang-container */
+  background-color: #fff; /* Màu nền nếu cần */
+  padding: 10px; /* Khoảng cách giữa nội dung và biên của tong-tien-container */
+}

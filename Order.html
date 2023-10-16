@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="order.css">
+  <title>Thực Đơn</title>
+  <style>
+    /* CSS để thêm border và bo tròn */
+    .col {
+      border: 0.5px solid #000;
+      /* Đường viền 1px đen */
+      border-radius: 10px;
+      /* Bo tròn các góc 10px */
+      padding: 10px;
+      /* Khoảng cách bên trong cột */
+      margin: 10px;
+      text-align: center;
+      margin-top: 3%;
+      /* Khoảng cách giữa các cột */
+    }
+
+    .col:hover {
+      background-color: green;
+    }
+
+    .row {
+      margin: -10px;
+      /* Đảm bảo không có khoảng cách giữa các hàng */
+    }
+
+    .loai-content {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 5%;
+      gap: 20px;
+      /* Khoảng cách giữa các card */
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .popup-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .close-popup {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="title">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">WebCafe</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" onclick="renderLoai()">Thực đơn</a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
+              class="bi bi-bag-fill mr-sm-3" viewBox="0 0 16 16" onclick="handeGioHang()">
+              <path
+                d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z" />
+            </svg>
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </div>
+    <div class="container" id="data-container">
+      <div class="loai-content">
+        <!-- Các sản phẩm sẽ được hiển thị ở đây -->
+      </div>
+    </div>
+    <div class="container">
+
+      <div id="gio-hang-container">
+
+        <!-- Các sản phẩm trong giỏ hàng sẽ được hiển thị ở đây -->
+
+
+
+      </div>
+      <div id="tong-tien-container">
+        <!-- Tổng tiền sẽ được hiển thị ở đây -->
+      </div>
+      <select id="ten-ban-dropdown">
+        <option value="">Chọn tên bàn</option>
+      </select>
+
+      <button id="thanh-toan-button" onclick="handeThanhToan()">Thanh toán</button>
+      <div id="thanh-toan-popup" class="popup">
+        <div class="popup-content">
+          <span class="close-popup" onclick="closePopup()">&times;</span>
+          <h2>Thông tin thanh toán</h2>
+          <p><span id="ban-info"></span></p>
+          <p>Tổng tiền: <span id="tong-tien-info"></span></p>
+          <div id="gio-hang-info"></div> <!-- Thêm một div để chứa thông tin từ giỏ hàng -->
+        </div>
+      </div>
+
+
+    </div>
+    <div class="footer"></div>
+
+  </div>
+  <script>
+
+    const gioHang = [];
+
+    function renderLoai() {
+      fetch('http://localhost:8080/allloai')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          // Lấy phần tử container
+          const container = document.getElementById("data-container");
+
+          // Xóa bất kỳ nội dung cũ nào trong container
+          container.innerHTML = '';
+
+          // Tạo phần tử div có class "row"
+          const row = document.createElement("div");
+          row.classList.add("row");
+
+          // Hiển thị dữ liệu mới trong container
+          data.forEach(item => {
+            // Tạo phần tử div có class "col"
+            const col = document.createElement("div");
+            col.classList.add("col");
+            col.textContent = item.tenLoai; // Thay "tenLoai" bằng tên trường bạn muốn hiển thị
+            col.setAttribute("data-id", item.loai); // Thêm thuộc tính data-id
+            col.addEventListener("click", () => handleTenLoaiClick(item.loai)); // Thêm sự kiện click
+            // Thêm cột vào hàng
+            row.appendChild(col);
+          });
+
+          // Thêm hàng vào container
+          container.appendChild(row);
+        })
+        .catch(error => console.error('Lỗi:', error));
+    }
+    function handleTenLoaiClick(itemId) {
+      isThanhToanDisabled = false;
+      layDanhSachTenBan();
+      fetch(`http://localhost:8080/loaibyid?loaiId=${itemId}`)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          const container = document.getElementById("data-container");
+          let loaiContent = document.querySelector(".loai-content");
+
+          // Nếu "loai-content" đã tồn tại, cập nhật nó
+          if (loaiContent) {
+            loaiContent.innerHTML = ""; // Xóa nội dung cũ
+          } else {
+            // Nếu "loai-content" chưa tồn tại, tạo mới
+            loaiContent = document.createElement("div");
+            loaiContent.classList.add("loai-content");
+            container.appendChild(loaiContent);
+          }
+
+          data.thucDonList.forEach(thucDon => {
+            console.log(thucDon);
+            // Tạo thẻ div với class "card"
+            const cardDiv = document.createElement("div");
+            cardDiv.classList.add("card");
+            cardDiv.style.width = "18rem";
+            const cardImage = document.createElement("img");
+            cardImage.classList.add("card-img-top");
+            cardImage.src = thucDon.images; // Đường dẫn hình ảnh từ dữ liệu
+            // Tạo thẻ h5 với class "card-title" và gán nội dung từ tên món
+            const cardTitle = document.createElement("h5");
+            cardTitle.classList.add("card-title");
+            cardTitle.textContent = thucDon.tenMon;
+
+            // Tạo thẻ p với class "card-text" và gán nội dung từ mô tả món (nếu có)
+            const cardText = document.createElement("p");
+            cardText.classList.add("card-text");
+            cardText.textContent = thucDon.donGia || "No description available";
+
+            // Tạo thẻ a với class "btn btn-primary" và href
+            const cardLink = document.createElement("a");
+            cardLink.classList.add("btn", "btn-primary");
+            cardLink.href = "#";
+            cardLink.textContent = "Thêm vào giỏ hàng";
+            cardLink.addEventListener("click", function () {
+              // Thêm thông tin sản phẩm vào giỏ hàng
+              const sanPhamTrongGioHang = gioHang.find(item => item.itemId === thucDon.thucDonId);
+
+              if (sanPhamTrongGioHang) {
+                // Nếu sản phẩm đã tồn tại trong gioHang, tăng số lượng lên 1
+                sanPhamTrongGioHang.soLuong++;
+                sanPhamTrongGioHang.tongTienLoaiSanPham = sanPhamTrongGioHang.donGia * sanPhamTrongGioHang.soLuong;
+              } else {
+                // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới vào gioHang
+                gioHang.push({
+                  itemId: thucDon.thucDonId,
+                  tenMon: thucDon.tenMon,
+                  donGia: thucDon.donGia,
+                  soLuong: 1, // Số lượng mặc định là 1
+                  tongTienLoaiSanPham: thucDon.donGia,
+                });
+              }
+
+              hienThiGioHang();
+              capNhatTongTien();
+            });
+
+            // Thêm các phần tử vào thẻ "card"
+            const cardBody = document.createElement("div");
+            cardBody.classList.add("card-body");
+            cardBody.appendChild(cardImage);
+            cardBody.appendChild(cardTitle);
+            cardBody.appendChild(cardText);
+            cardBody.appendChild(cardLink);
+
+
+            cardDiv.appendChild(cardBody);
+
+            // Thêm thẻ "card" vào "loaiContent"
+
+            loaiContent.appendChild(cardDiv);
+          });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+    let gioHangVisible = true; // Biến flag để theo dõi trạng thái hiển thị giỏ hàng
+
+    function handeGioHang() {
+      if (gioHangVisible) {
+        // Nếu giỏ hàng đã hiển thị, ẩn nó đi
+        const gioHangContainer = document.getElementById("gio-hang-container");
+        const btnThanhToan = document.getElementById("thanh-toan-button");
+        const handeBan = document.getElementById("ten-ban-dropdown");
+        handeBan.style.display = "none";
+        btnThanhToan.style.display = "none";
+        gioHangContainer.style.display = "none";
+      } else {
+        // Nếu giỏ hàng chưa hiển thị, hiển thị nó
+        const gioHangContainer = document.getElementById("gio-hang-container");
+        const btnThanhToan = document.getElementById("thanh-toan-button");
+        const handeBan = document.getElementById("ten-ban-dropdown");
+        btnThanhToan.style.display = "block";
+        gioHangContainer.style.display = "block";
+        handeBan.style.display = "block";
+
+        // Gọi hàm để hiển thị thông tin giỏ hàng
+        hienThiGioHang();
+      }
+
+      gioHangVisible = !gioHangVisible; // Đảo ngược trạng thái hiển thị
+      console.log(gioHang);
+    }
+    function tinhTongTien() {
+      let tongTien = 0;
+      gioHang.forEach(sanPham => {
+        tongTien += sanPham.donGia * sanPham.soLuong;
+      })
+      return tongTien;
+    }
+
+    function hienThiGioHang() {
+      const gioHangContainer = document.getElementById("gio-hang-container");
+      gioHangContainer.innerHTML = ""; // Xóa nội dung cũ
+
+      gioHang.forEach(sanPham => {
+        const sanPhamDiv = document.createElement("div");
+
+        // Hiển thị tên sản phẩm và số lượng
+
+
+        sanPhamDiv.textContent = `${sanPham.tenMon} - Số lượng: ${sanPham.soLuong} - Tổng tiền: ${sanPham.tongTienLoaiSanPham} đ`;
+
+        // Tạo nút để tăng số lượng
+        const tangSoLuongBtn = document.createElement("button");
+        tangSoLuongBtn.textContent = "+";
+        tangSoLuongBtn.addEventListener("click", function () {
+          sanPham.soLuong++;
+          sanPham.tongTienLoaiSanPham = sanPham.donGia * sanPham.soLuong; // Cập nhật tổng tiền loại sản phẩm
+          hienThiGioHang(); // Cập nhật lại giao diện giỏ hàng
+          capNhatTongTien(); // Cập nhật tổng tiền
+        });
+
+        // Tạo nút để giảm số lượng
+        const giamSoLuongBtn = document.createElement("button");
+        giamSoLuongBtn.textContent = "-";
+        giamSoLuongBtn.addEventListener("click", function () {
+          if (sanPham.soLuong > 1) {
+            sanPham.soLuong--;
+            sanPham.tongTienLoaiSanPham = sanPham.donGia * sanPham.soLuong; // Cập nhật tổng tiền loại sản phẩm
+            hienThiGioHang(); // Cập nhật lại giao diện giỏ hàng
+            capNhatTongTien(); // Cập nhật tổng tiền
+          }
+        });
+
+        const xoaSanPhamBtn = document.createElement("button");
+        xoaSanPhamBtn.textContent = "Xóa";
+        xoaSanPhamBtn.addEventListener("click", function () {
+          xoaSanPhamKhoiGioHang(sanPham);
+          hienThiGioHang(); // Cập nhật lại giao diện giỏ hàng
+          capNhatTongTien(); // Cập nhật tổng tiền
+        });
+
+        sanPhamDiv.appendChild(tangSoLuongBtn);
+        sanPhamDiv.appendChild(giamSoLuongBtn);
+        sanPhamDiv.appendChild(xoaSanPhamBtn);
+
+        gioHangContainer.appendChild(sanPhamDiv);
+      });
+
+      capNhatTongTien(); // Cập nhật tổng tiền
+    }
+
+    function capNhatTongTien() {
+      var hienthiTongTien = document.getElementById("tong-tien-container");
+      // Tạo một phần tử để hiển thị tổng tiềnconst tongTienDiv = hienthiTongTien.querySelector("div");
+      hienthiTongTien.textContent = `Tổng tiền: ${tinhTongTien()} đ`;
+    }
+
+
+    function xoaSanPhamKhoiGioHang(sanPham) {
+      const index = gioHang.indexOf(sanPham);
+      if (index !== -1) {
+        gioHang.splice(index, 1);
+      }
+    }
+    function layDanhSachTenBan() {
+      fetch('http://localhost:8080/allban')
+        .then(response => response.json())
+        .then(data => {
+          const tenBanDropdown = document.getElementById('ten-ban-dropdown');
+          // Xóa tất cả các option hiện tại
+          tenBanDropdown.innerHTML = "";
+
+          // Duyệt qua dữ liệu và tạo các option mới
+          data.forEach(ban => {
+            const option = document.createElement('option');
+            option.value = ban.banId; // Giả sử bạn có một trường 'id' trong dữ liệu bàn
+            option.textContent = ban.tenBan; // Thay 'tenBan' bằng tên trường chứa tên bàn
+            tenBanDropdown.appendChild(option);
+          });
+        })
+        .catch(error => console.error('Lỗi:', error));
+    }
+
+    // Gọi hàm layDanhSachTenBan() khi cần cập nhật danh sách tên bàn
+
+    let isThanhToanDisabled = false;
+
+    function handeThanhToan() {
+      // Lấy tham chiếu đến nút "Thanh toán"
+      const thanhToanButton = document.getElementById('thanh-toan-button');
+
+      // Thêm biến để theo dõi trạng thái của nút "Thanh toán"
+
+      // Thêm sự kiện click cho nút "Thanh toán"
+      thanhToanButton.addEventListener('click', function () {
+        if (isThanhToanDisabled) {
+          return; // Không cho phép thực hiện nếu nút đã bị disable
+        }
+
+        // Đặt trạng thái disabled cho nút "Thanh toán" và cập nhật biến isThanhToanDisabled
+        thanhToanButton.disabled = true;
+        isThanhToanDisabled = true;
+
+        // Lấy giá trị id của bàn đã chọn
+        const tenBanDropdown = document.getElementById('ten-ban-dropdown');
+        const tenBanChon = tenBanDropdown.value;
+
+        const hoaDonData = gioHang.slice();
+        // In giá trị id của bàn và gioHang ra console (hoặc thực hiện xử lý khác ở đây)
+        console.log('ID của bàn:', tenBanChon);
+        console.log('Gio hàng (trước khi xóa):', hoaDonData);
+        const hoaDonDTOList = hoaDonData.map(item => ({
+          thucDonId: item.itemId,
+          soLuong: item.soLuong,
+          thanhTien: item.tongTienLoaiSanPham,
+          userId: 1, // Mặc định là 1 (thay bằng giá trị thực tế nếu cần)
+          banId: tenBanChon // Gán giá trị banId từ tenBanChon
+        }));
+        fetch('http://localhost:8080/addHoaDon', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(hoaDonDTOList),
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Xử lý phản hồi từ API ở đây (nếu cần)
+            console.log('Phản hồi từ API:', data);
+
+            // Đặt trạng thái enabled cho nút "Thanh toán" và cập nhật biến isThanhToanDisabled
+            thanhToanButton.disabled = false;
+            isThanhToanDisabled = false;
+
+            console.log("giHang", hoaDonData);
+            // Đặt giá trị mặc định cho tenBanDropdown sau khi thực hiện xong thanh toán
+            tenBanDropdown.value = '';
+            layDanhSachTenBan();
+            openPopup(tenBanChon, hoaDonData);
+
+            // Hiển thị thông tin từ giỏ hàng
+
+          })
+          .catch(error => {
+            // Xử lý lỗi ở đây (nếu có)
+            console.error('Lỗi:', error);
+
+            // Đặt trạng thái enabled cho nút "Thanh toán" và cập nhật biến isThanhToanDisabled (trong trường hợp có lỗi)
+            thanhToanButton.disabled = false;
+            isThanhToanDisabled = false;
+
+          });
+
+        const unActive = {
+          newStatus: false
+        }
+        fetch(`http://localhost:8080/updateBan/${tenBanChon}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(unActive),
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Xử lý phản hồi từ API ở đây (nếu cần)
+            console.log('Phản hồi từ API:', data);
+
+
+          })
+          .catch(error => {
+            // Xử lý lỗi ở đây (nếu có)
+            console.error('Lỗi:', error);
+            alert('Thanh toán không thành công');
+          });
+
+        // Xóa hết dữ liệu trong gioHang bằng cách gán nó bằng mảng rỗng
+        gioHang.length = 0;
+
+        // Cập nhật lại giao diện giỏ hàng (nếu cần)
+
+        // In giá trị sau khi xóa nó
+        console.log('Gio hàng (sau khi xóa):', gioHang);
+        hienThiGioHang();
+      });
+    }
+    // Hàm mở popup và hiển thị thông tin
+    // ... (các phần khác của mã của bạn)
+
+    // Hàm mở popup và hiển thị thông tin
+    function openPopup(ban, data) {
+      const popup = document.getElementById('thanh-toan-popup');
+      const banInfo = document.getElementById('ban-info');
+      const tongTienInfo = document.getElementById('tong-tien-info');
+      const gioHangInfo = document.getElementById('gio-hang-info');
+      gioHangInfo.innerHTML = "Thông tin giỏ hàng:<br>";
+
+      data.forEach(item => {
+        gioHangInfo.innerHTML += `Sản phẩm: ${item.tenMon}, Đơn giá: ${item.donGia}, Số lượng: ${item.soLuong}, Tổng tiền: ${item.tongTienLoaiSanPham}<br>`;
+      });
+
+      banInfo.textContent = `Bàn: ${ban}`;
+      const tongTien = data.reduce((acc, item) => acc + item.tongTienLoaiSanPham, 0);
+      tongTienInfo.textContent = `Tổng tiền: ${tongTien}`;
+
+      popup.style.display = 'block';
+    }
+
+    // ... (các phần khác của mã của bạn)
+
+    // Đoạn mã để đóng popup
+    function closePopup() {
+      const popup = document.getElementById('thanh-toan-popup');
+      popup.style.display = 'none';
+    }
+
+
+
+  </script>
+
+</body>
+
+</html>
