@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="admin.css">
+
+  <title>Trang Quan Ly</title>
+</head>
+
+<body>
+
+  <div class="main-container d-flex">
+    <div class="sidebar" id="side_nav">
+      <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between">
+        <h1 class="fs-4"><span class="bg-white text-dark rounded shadow px-2 me-2">CF</span> <span
+            class="text-white">Web Cafe</span></h1>
+        <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="fal fa-stream"></i></button>
+      </div>
+
+      <ul class="list-unstyled px-2">
+        <li class="" onclick="handleLoai()"><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
+              class="fal fa-home"></i>
+            Quản lý loại thực đơn</a></li>
+        <li class="" onclick="handleThucDon()"><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
+              class="fal fa-home"></i>
+            Quản lý thực đơn</a></li>
+        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-list"></i>
+            Quản lý users</a></li>
+        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
+              class="fal fa-envelope-open-text"></i>Lịch sử hóa đơn</a></li>
+      </ul>
+      <hr class="h-color mx-2">
+
+      <ul class="list-unstyled px-2">
+        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-bars"></i>
+            Settings</a></li>
+        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-bell"></i>
+            Notifications</a></li>
+
+      </ul>
+
+    </div>
+    <div class="content">
+      <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid">
+          <div class="d-flex justify-content-between d-md-none d-block">
+            <button class="btn px-1 py-0 open-btn me-2"><i class="fal fa-stream"></i></button>
+            <a class="navbar-brand fs-4" href="#"><span class="bg-dark rounded px-2 py-0 text-white">CL</span></a>
+
+          </div>
+          <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="fal fa-bars"></i>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Profile</a>
+              </li>
+
+            </ul>
+
+          </div>
+        </div>
+      </nav>
+
+      <div class="dashboard-content px-3 pt-4">
+        <h2 class="fs-5">Thông tin</h2>
+        <div id="content">
+
+        </div>
+        <div id="editModal" class="modal">
+          <div class="modal-content">
+            <span class="close" id="closeEditModal">&times;</span>
+            <h2>Sửa Loại</h2>
+            <input type="text" id="editId" placeholder="ID" readonly>
+            <input type="text" id="editLoai" placeholder="Loại">
+            <button id="completeEdit">Hoàn thành</button>
+          </div>
+        </div>
+
+
+        <!-- Modal Thêm Loại -->
+        <div id="addModal" class="modal">
+          <div class="modal-content">
+            <span class="close" id="closeAddModal">&times;</span>
+            <h2>Thêm Loại</h2>
+            <input type="text" id="addLoai" placeholder="Tên loại">
+            <button id="submitAdd">Thêm</button>
+          </div>
+        </div>
+
+
+
+        <div id="deleteModal" class="modal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa loại này?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                  id="cancelDeleteButton">Đóng</button>
+                <button type="button" class="btn btn-primary" id="confirmDeleteButton">Xác nhận</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <script src="admin.js"></script>
+  <script src="thucdon.js"></script>
+</body>
+
+</html>
