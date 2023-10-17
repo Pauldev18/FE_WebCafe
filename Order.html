@@ -96,8 +96,10 @@
               <path
                 d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5z" />
             </svg>
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+            <a href="UserLogin.html" class="btn btn-outline-success my-2 my-sm-0" type="submit"
+              onclick="logoutUser()">Đăng xuất</a>
           </form>
         </div>
       </nav>
@@ -140,6 +142,9 @@
 
   </div>
   <script>
+    function logoutUser() {
+      localStorage.clear();
+    }
 
     const gioHang = [];
 
@@ -413,7 +418,7 @@
           thucDonId: item.itemId,
           soLuong: item.soLuong,
           thanhTien: item.tongTienLoaiSanPham,
-          userId: 1, // Mặc định là 1 (thay bằng giá trị thực tế nếu cần)
+          userId: localStorage.getItem("userId"), // Mặc định là 1 (thay bằng giá trị thực tế nếu cần)
           banId: tenBanChon // Gán giá trị banId từ tenBanChon
         }));
         fetch('http://localhost:8080/addHoaDon', {

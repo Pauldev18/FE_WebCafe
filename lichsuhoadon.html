@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Lịch sử</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h5>Tìm theo id nhân viên: </h5>
+    <input type="text" id="userId">
+    <button id="btn-search">Tìm</button>
+    <br />
+    <a href="admin.html">Quay lại trang admin</a>
+    <table class="table table-bordered" id="table-ls">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>ID Thực Đơn</th>
+          <th>ID Bàn</th>
+          <th>Số Lượng</th>
+          <th>Thành tiền</th>
+          <th>User</th>
+          <th>Create At</th>
+          <th>Update At</th>
+        </tr>
+      </thead>
+      <tbody id="table-ls-body"></tbody>
+    </table>
+  </div>
+  <script src="lichsuhoadon.js"></script>
+</body>
+
+</html>

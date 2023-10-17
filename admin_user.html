@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>JSP Page</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h2>LIST USER</h2>
+    <!-- Button trigger modal -->
+    <a href="admin.html" style="font-size: 20px;">Quay lại trang chủ</a>
+    <!-- Modal -->
+    <div class="modal fade" id="myEditModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="form-user">
+              <div class="form-group">
+                <label>FullName</label>
+                <input type="text" class="form-control" name="fullname" placeholder="Enter Fullname">
+              </div>
+              <div class="form-group">
+                <label>Phone</label>
+                <input type="text" class="form-control" name="phone" placeholder="Enter Phone">
+              </div>
+              <div class="form-group">
+                <label>UserName</label>
+                <input type="email" class="form-control" name="username" placeholder="Enter Email">
+              </div>
+              <div class="form-group">
+                <label>PassWord</label>
+                <input type="password" class="form-control" name="pass" placeholder="Enter age">
+              </div>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <table class="table table-bordered" id="table-user">
+      <tr>
+        <th>Full Name</th>
+        <th>Phone</th>
+        <th>username</th>
+        <th>password</th>
+      </tr>
+
+    </table>
+  </div>
+  <script src="admin_user.js"></script>
+</body>
+
+</html>

@@ -289,12 +289,13 @@ function handleDelete(thucDon) {
       } else {
         // Xóa thất bại
         console.log(`Xóa không thành công: ${thucDonId}`);
-      }
+      };
+      location.reload();
     })
     .catch(error => {
       console.error('Đã xảy ra lỗi khi xóa: ', error);
     });
-    location.reload();
+   
 }
 
 

@@ -131,7 +131,6 @@ function deleteLoai(id) {
   .catch(error => {
     const contentDiv = document.getElementById('content');
     contentDiv.innerHTML='';
-    alert("Lỗi");
     handleLoai();
   });
 }
